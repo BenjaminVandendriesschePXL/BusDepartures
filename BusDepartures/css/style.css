@@ -1,0 +1,40 @@
+*{
+    font-size:1em
+}
+h1 {
+    font-size:3rem;
+}
+table{
+    font-size:large;
+    display: block;
+    max-height: 50vh;
+    width:fit-content;
+    overflow-y: hidden;
+    border:1px solid lightgrey;
+}
+th {
+}
+
+tr {
+    height:2vh;
+}
+
+td {
+    width:10vw;
+}
+
+tr .spacingUnder {
+    padding-bottom:1em;
+
+}
+.busNumber{
+    width:1vw;
+    padding-right:1em;
+}
+.busNumber span{
+    border-radius: 15px;
+    border:1px solid black;
+    text-align: center;
+    font-size:2rem;
+
+}
