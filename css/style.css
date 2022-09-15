@@ -3,13 +3,18 @@
 }
 h1 {
     font-size:3rem;
+    clear:both;
 }
 h2 {
     font-size:2.5rem;
+    float:left;
+    margin-right:200px;
 }
 table{
     font-size:large;
     display: block;
+    float:left;
+    margin-right:50px;
     max-height: 60vh;
     width:fit-content;
     overflow-y: hidden;
