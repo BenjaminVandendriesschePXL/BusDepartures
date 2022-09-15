@@ -1,4 +1,3 @@
-import bootstrap from 'bootstrap'
 const api_key = "Zju4uas3VQBnJ2r2BGY2kMGXAYg6pj0SxNyRpIKjDxk";
 let configData;
 const dataGatheringInterval = setInterval(callApi, 600000);
