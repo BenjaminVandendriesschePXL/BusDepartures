@@ -67,8 +67,9 @@ function prepareData(data){
 function createTable(busDepartures) {
     let table = document.getElementById("bus_departures");
     table.innerHTML="";
-    let tableHeader = document.createElement("thead")
+    let busStopNameHeader = document.getElementById("busStopName")
     let headerText = document.createTextNode(busStopName)
+    busStopNameHeader.appendChild(headerText)
     for (let i = 0; i < busDepartures.length; i++)
     {
         console.log(busDepartures[i]);
