@@ -1,7 +1,7 @@
 const api_key = "Zju4uas3VQBnJ2r2BGY2kMGXAYg6pj0SxNyRpIKjDxk";
 let configData;
-const dataGatheringInterval = setInterval(callApi, 600000);
-const removePastDeparturesInterval = setInterval(removeOldDepartures,1000)
+const dataGatheringInterval = setInterval(callApi, 14400000 );
+const removePastDeparturesInterval = setInterval(removeOldDepartures,60000)
 let busStopName
 
 function removeOldDepartures() {
@@ -37,7 +37,7 @@ function loadConfig(position) {
 
 function callApi() {
     console.log("GetData");
-    fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.busStopIds}&maxPerBoard=10&apikey=${api_key}`)
+    fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.busStopIds}&maxPerBoard=50&apikey=${api_key}`)
         .then((response)=>{ return response.json()})
         .then((data)=>prepareData(data.boards));
 }
