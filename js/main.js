@@ -61,6 +61,7 @@ function departures(){
         fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.busStopIds}&maxPerBoard=50&apikey=${api_key}`)
             .then((response)=>{ return response.json()})
             .then((data)=>prepareData((data.boards),"Bus"));
+
         fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.trainStopIds}&maxPerBoard=50&apikey=${api_key}`)
             .then((response)=>{ return response.json()})
             .then((data)=>prepareData((data.boards),"Train"));
