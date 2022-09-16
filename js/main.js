@@ -2,7 +2,7 @@ window.addEventListener("load",departures)
 
 
 function departures(){
-    const api_key = "Zju4uas3VQBnJ2r2BGY2kMGXAYg6pj0SxNyRpIKjDxk";
+    const api_key = "1hUmyZTqwRy5yxuakb-EuYtcukE8PzGg81A-BxAYPJo";
 
     let configData;
     const dataGatheringInterval = setInterval(callApi, 14400000 );
@@ -98,38 +98,27 @@ function departures(){
         for (let i = 0; i < departureList.length; i++)
         {
             let newRow = document.createElement("tr");
-            let secondRow = document.createElement("tr");
             let busNumberCell = document.createElement("td");
             let busNumberText = document.createTextNode(departureList[i][0].transport.name);
             let busNumberSpan = document.createElement("span")
             busNumberSpan.appendChild(busNumberText)
             let busDepartureTimeCell = document.createElement("td");
             let busDepartureTimeText = document.createTextNode(departureList[i][0].time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}));
-            if(departureList[i][0].delay > 0 ){
-                busDepartureTimeCell.style.color = "red";
-            }
-            let busDestinationCell = document.createElement("td");
+
             let busDestinationText = document.createTextNode(departureList[i][0].transport.headsign);
             let linebreak = document.createElement("br");
 
             busNumberCell.appendChild(busNumberSpan);
             busNumberSpan.style.color = departureList[i][0].transport.textColor;
-            //busNumberCell.setAttribute("rowspan",2)
-            busNumberCell.classList.add("busNumber","spacingUnder")
             busNumberSpan.style.backgroundColor = departureList[i][0].transport.color;
             busDepartureTimeCell.appendChild(busDepartureTimeText);
             busDepartureTimeCell.appendChild(linebreak);
             busDepartureTimeCell.appendChild(busDestinationText);
-            busDepartureTimeCell.classList.add("spacingUnder")
 
             newRow.setAttribute("departure",departureList[i][0].time);
-            secondRow.setAttribute("departure",departureList[i][0].time);
-
             newRow.appendChild(busNumberCell);
             newRow.appendChild(busDepartureTimeCell);
-            //secondRow.appendChild(busDestinationCell);
             table.appendChild(newRow);
-            //table.appendChild(secondRow);
         }
     }
 }
