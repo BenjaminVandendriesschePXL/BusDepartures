@@ -5,26 +5,23 @@ function departures(){
     const api_key = "Zju4uas3VQBnJ2r2BGY2kMGXAYg6pj0SxNyRpIKjDxk";
 
     let configData;
-    const dataGatheringInterval = setInterval(callApi, 1000 );
+    const dataGatheringInterval = setInterval(callApi, 14400000 );
     const removePastDeparturesInterval = setInterval(removeOldDepartures,60000)
-    let busStopName
-    let trainStopName
+
 
     function removeOldDepartures() {
+
         let dataSet = document.getElementById("Bus_departures")
         let children = dataSet.getElementsByTagName("tr");
         let currentTime = new Date();
-        console.log(currentTime)
         for (let i = 0; i<children.length;i++){
             let time = new Date(children[i].getAttribute("departure"))
             if(time - currentTime < 0){
-                console.log("delete")
                 if(children[i].hasChildNodes()){
                     children[i].removeChild(children[i].children[0])
                 }
                 dataSet.removeChild(children[i]);
             }
-            console.log("negative")
         }
         dataSet = document.getElementById("Train_departures")
         children = dataSet.getElementsByTagName("tr");
@@ -32,13 +29,11 @@ function departures(){
         for (let i = 0; i<children.length;i++){
             let time = new Date(children[i].getAttribute("departure"))
             if(time - currentTime < 0){
-                console.log("delete")
                 if(children[i].hasChildNodes()){
                     children[i].removeChild(children[i].children[0])
                 }
                 dataSet.removeChild(children[i]);
             }
-            console.log("negative")
         }
     }
 
@@ -51,18 +46,21 @@ function departures(){
 
     function loadConfig(position) {
         configData = getConfigData(position);
-        busStopName = configData.BusStopName;
-        trainStopName = configData.TrainStopName;
+        let busname = document.getElementById("BusStopName")
+        let trainname = document.getElementById("TrainStopName")
+        busname.appendChild(document.createTextNode(configData.BusStopName))
+        trainname.appendChild(document.createTextNode(configData.TrainStopName))
+
         callApi();
     }
 
 
     function callApi() {
-        console.log("GetData");
+
+
         fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.busStopIds}&maxPerBoard=50&apikey=${api_key}`)
             .then((response)=>{ return response.json()})
             .then((data)=>prepareData((data.boards),"Bus"));
-        console.log("GetData");
         fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.trainStopIds}&maxPerBoard=50&apikey=${api_key}`)
             .then((response)=>{ return response.json()})
             .then((data)=>prepareData((data.boards),"Train"));
@@ -73,7 +71,6 @@ function departures(){
     function prepareData(data,transport){
 
         let departureList = [];
-        console.log(data);
         let list = document.getElementById(transport+"_departures");
         for(let i = 0;i<data.length;i++){
             for(let j = 0;j<data[i].departures.length;j++){
@@ -94,20 +91,12 @@ function departures(){
 
     function createTable(departureList,transport) {
         let tableId = transport+"_departures"
-        console.log(tableId)
         let table = document.getElementById(tableId);
         table.innerHTML="";
         let trainStopNameHeader = document.getElementById(transport+"StopName")
-        let headerText
-        if(transport === "Bus") {
-            headerText = document.createTextNode(busStopName)
-        }else if(transport === "Train") {
-            headerText = document.createTextNode(trainStopName)
-        }
-        trainStopNameHeader.appendChild(headerText)
+
         for (let i = 0; i < departureList.length; i++)
         {
-            console.log(departureList[i]);
             let newRow = document.createElement("tr");
             let secondRow = document.createElement("tr");
             let busNumberCell = document.createElement("td");
