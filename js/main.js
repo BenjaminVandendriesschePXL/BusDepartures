@@ -5,7 +5,7 @@ function departures(){
     const api_key = "Zju4uas3VQBnJ2r2BGY2kMGXAYg6pj0SxNyRpIKjDxk";
 
     let configData;
-    const dataGatheringInterval = setInterval(callApi, 14400000 );
+    const dataGatheringInterval = setInterval(callApi, 1000 );
     const removePastDeparturesInterval = setInterval(removeOldDepartures,60000)
     let busStopName
     let trainStopName
