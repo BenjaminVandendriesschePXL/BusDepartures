@@ -1,0 +1,8 @@
+.busNumber {
+    width:40px;
+    height:40px;
+    line-height:40px;
+    text-align: center;
+    margin:auto;
+    border-radius : 10px;
+}
