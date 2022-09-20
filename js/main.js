@@ -1,41 +1,12 @@
-window.addEventListener("load",departures)
-
+departures()
 
 function departures(){
     const api_key = "1hUmyZTqwRy5yxuakb-EuYtcukE8PzGg81A-BxAYPJo";
-
     let configData;
+
     const dataGatheringInterval = setInterval(callApi, 14400000 );
-    const removePastDeparturesInterval = setInterval(removeOldDepartures,60000)
+    const removePastDeparturesInterval = setInterval(removeOldDepartures,30000)
 
-
-    function removeOldDepartures() {
-
-        let dataSet = document.getElementById("Bus_departures")
-        let children = dataSet.getElementsByTagName("tr");
-        let currentTime = new Date();
-        for (let i = 0; i<children.length;i++){
-            let time = new Date(children[i].getAttribute("departure"))
-            if(time - currentTime < 0){
-                if(children[i].hasChildNodes()){
-                    children[i].removeChild(children[i].children[0])
-                }
-                dataSet.removeChild(children[i]);
-            }
-        }
-        dataSet = document.getElementById("Train_departures")
-        children = dataSet.getElementsByTagName("tr");
-
-        for (let i = 0; i<children.length;i++){
-            let time = new Date(children[i].getAttribute("departure"))
-            if(time - currentTime < 0){
-                if(children[i].hasChildNodes()){
-                    children[i].removeChild(children[i].children[0])
-                }
-                dataSet.removeChild(children[i]);
-            }
-        }
-    }
 
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => loadConfig(position));
@@ -43,6 +14,44 @@ function departures(){
         configData = getDefaultData()
         callApi()
     }
+
+    function removeOldDepartures() {
+        let timer = document.getElementById("currentTime")
+        let dataSet = document.getElementById("Bus_departures")
+        let children = dataSet.getElementsByClassName("card")
+        let currentTime = new Date();
+        let timerText = document.createTextNode(currentTime.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        }))
+        timer.innerText = ""
+        timer.appendChild(timerText)
+        for (let i = 0; i < children.length; i++) {
+            let time = new Date(children[i].getAttribute("departure"))
+
+            if (time - currentTime < 0) {
+                dataSet.removeChild(children[i]);
+                // if(children[i].hasChildNodes()){
+                //     children[i].removeChild(children[i].children[0])
+            }
+            //dataSet.removeChild(children[i]);
+        }
+
+        dataSet = document.getElementById("Train_departures")
+        children = dataSet.getElementsByClassName("card");
+        console.log(children.length)
+        for (let i = 0; i < children.length; i++) {
+            console.log(children[i])
+            let time = new Date(children[i].getAttribute("departure"))
+            if (time - currentTime < 0) {
+                dataSet.removeChild(children[i]);
+                console.log("delete");
+
+            }
+        }
+
+    }
+
 
     function loadConfig(position) {
         configData = getConfigData(position);
@@ -70,9 +79,7 @@ function departures(){
     }
 
     function prepareData(data,transport){
-
         let departureList = [];
-        let list = document.getElementById(transport+"_departures");
         for(let i = 0;i<data.length;i++){
             for(let j = 0;j<data[i].departures.length;j++){
                 departureList.push([data[i].departures[j],transport+"stop: "+ data[i].place.code]);
@@ -141,7 +148,11 @@ function departures(){
 
         for (let i = 0; i < departureList.length; i++)
         {
-            divToFill.appendChild(createCard(departureList[i][0].transport.name,departureList[i][0].time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),departureList[i][0].transport.headsign,departureList[i][0].transport.textColor,departureList[i][0].transport.color))
+            let newCard = createCard(departureList[i][0].transport.name,departureList[i][0].time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),departureList[i][0].transport.headsign,departureList[i][0].transport.textColor,departureList[i][0].transport.color)
+
+            newCard.setAttribute("departure",departureList[i][0].time)
+            divToFill.appendChild(newCard)
+
             // let newRow = document.createElement("tr");
             // let busNumberCell = document.createElement("td");
             // let busNumberText = document.createTextNode(departureList[i][0].transport.name,);
@@ -160,10 +171,10 @@ function departures(){
             // busDepartureTimeCell.appendChild(linebreak);
             // busDepartureTimeCell.appendChild(busDestinationText);
             //
-            // newRow.setAttribute("departure",departureList[i][0].time);
             // newRow.appendChild(busNumberCell);
             // newRow.appendChild(busDepartureTimeCell);
             // table.appendChild(newRow);
         }
+
     }
 }
