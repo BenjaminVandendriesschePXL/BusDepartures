@@ -1,18 +1,28 @@
 departures()
 
-function departures(){
+function departures() {
     const api_key = "1hUmyZTqwRy5yxuakb-EuYtcukE8PzGg81A-BxAYPJo";
     let configData;
+    function init_widget(config) {
+        if (!config) {
+            console.log("no config")
+            return;
+        }
+        let auth_token = config.player_params['auth_token']
+        console.log("auth token" + auth_token)
+    }
 
-    const dataGatheringInterval = setInterval(callApi, 14400000 );
-    const removePastDeparturesInterval = setInterval(removeOldDepartures,30000)
+    const dataGatheringInterval = setInterval(function e() {
+        getBusData()
+    }, 14400000);
+    const removePastDeparturesInterval = setInterval(removeOldDepartures, 30000)
 
 
-    if(navigator.geolocation){
+    if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => loadConfig(position));
-    } else{
+    } else {
         configData = getDefaultData()
-        callApi()
+        getBusData();
     }
 
     function removeOldDepartures() {
@@ -31,21 +41,17 @@ function departures(){
 
             if (time - currentTime < 0) {
                 dataSet.removeChild(children[i]);
-                // if(children[i].hasChildNodes()){
-                //     children[i].removeChild(children[i].children[0])
             }
-            //dataSet.removeChild(children[i]);
+
         }
 
         dataSet = document.getElementById("Train_departures")
         children = dataSet.getElementsByClassName("card");
-        console.log(children.length)
+
         for (let i = 0; i < children.length; i++) {
-            console.log(children[i])
             let time = new Date(children[i].getAttribute("departure"))
             if (time - currentTime < 0) {
                 dataSet.removeChild(children[i]);
-                console.log("delete");
 
             }
         }
@@ -59,44 +65,82 @@ function departures(){
         let trainname = document.getElementById("TrainStopName")
         busname.appendChild(document.createTextNode(configData.BusStopName))
         trainname.appendChild(document.createTextNode(configData.TrainStopName))
-
-        callApi();
+        getBusData()
     }
 
+    // function getDataViaPlayer(){
+    //     const data = {
+    //         "url":`https://transit.hereapi.com/v8/departures?ids=${configData.busStopIds}&maxPerBoard=50&apikey=${api_key}`,
+    //         "method":"GET",
+    //         "cache":"0"
+    //     }
+    //     fetch("http://localhost:9999/request",{
+    //         "method":"POST",
+    //         headers:{
+    //             "Authorization":"widget "+auth_token
+    //         },
+    //         body:JSON.stringify(data)
+    //     })
+    //         .then((response)=>{
+    //             if(response.status == 200){
+    //                 return response.json();
+    //             }else{
+    //
+    //
+    //             }
+    //         })
+    //         .then((data)=>console.log(data));
+    // }
 
-    function callApi() {
+    function getBusData() {
 
+        let bussesUrl = `https://transit.hereapi.com/v8/departures?ids=${configData.busStopIds}&maxPerBoard=50&apikey=${api_key}`
+        fetch(bussesUrl, {
+            'method': 'GET',
+            'Cache-Control': 'no-cache',
+            'redirect': 'follow'
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => prepareData((data.boards), "Bus"))
+            .then((data) => getTrainData())
+    }
 
-        fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.busStopIds}&maxPerBoard=50&apikey=${api_key}`)
-            .then((response)=>{ return response.json()})
-            .then((data)=>prepareData((data.boards),"Bus"));
+    function getTrainData() {
 
-        fetch(`https://transit.hereapi.com/v8/departures?ids=${configData.trainStopIds}&maxPerBoard=50&apikey=${api_key}`)
-            .then((response)=>{ return response.json()})
-            .then((data)=>prepareData((data.boards),"Train"));
-
+        let trainsUrl = `https://transit.hereapi.com/v8/departures?ids=${configData.trainStopIds}&maxPerBoard=50&apikey=${api_key}`
+        fetch(trainsUrl, {
+            'method': 'GET',
+            'Cache-Control': 'no-cache',
+            'redirect': 'follow'
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => prepareData((data.boards), "Train"));
 
     }
 
-    function prepareData(data,transport){
+    function prepareData(data, transport) {
         let departureList = [];
-        for(let i = 0;i<data.length;i++){
-            for(let j = 0;j<data[i].departures.length;j++){
-                departureList.push([data[i].departures[j],transport+"stop: "+ data[i].place.code]);
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < data[i].departures.length; j++) {
+                departureList.push([data[i].departures[j], transport + "stop: " + data[i].place.code]);
             }
         }
-        departureList.sort(function(a,b){
+        departureList.sort(function (a, b) {
             a[0].time = new Date(a[0].time);
             b[0].time = new Date(b[0].time);
             return a[0].time - b[0].time;
         })
-        createTable(departureList,transport);
+        createTable(departureList, transport);
 
     }
 
 
-    function createCard(name,time,headsign,textColor,color){
-       
+    function createCard(name, time, headsign, textColor, color) {
+
         let card = document.createElement("div")
         let transportNumber = document.createElement("div")
         let cardBody = document.createElement("div")
@@ -105,8 +149,8 @@ function departures(){
         let transportNumberText = document.createTextNode(name)
         let transportTime = document.createTextNode(time)
         let transportHeadsign = document.createTextNode(headsign)
-        
-        card.classList.add("card","h-1","flex-row")
+
+        card.classList.add("card", "h-1", "flex-row")
         transportNumber.classList.add("card-img-left", "busNumber")
         cardBody.classList.add("card-body")
         cardTime.classList.add("card-text")
@@ -124,56 +168,23 @@ function departures(){
         cardTime.appendChild(transportTime)
         cardLine.appendChild(transportHeadsign)
         return card
-        // <div className="row">
-        //     <div className="col">
-        //         <div className="card h-1 flex-row">
-        //             <div className="card-img-left"
-        //                  style="width:40px;height:40px;margin:auto;background:red;text-align:center;line-height:40px;border-radius:10px">333
-        //             </div>
-        //             <div className="card-body" style="padding:5px">
-        //                 <p className="card-text" style="margin:0">11u45</p>
-        //                 <p className="card-text">leuven-tremolo</p>
-        //
-        //             </div>
-        //         </div>
-        //     </div>
-        //     <div className="col-sm">
+
     }
 
-    function createTable(departureList,transport) {
-        let divId = transport+"_departures"
-         let divToFill = document.getElementById(divId);
-        // table.innerHTML="";
-        let trainStopNameHeader = document.getElementById(transport+"StopName")
+    function createTable(departureList, transport) {
+        let divId = transport + "_departures"
+        let divToFill = document.getElementById(divId);
 
-        for (let i = 0; i < departureList.length; i++)
-        {
-            let newCard = createCard(departureList[i][0].transport.name,departureList[i][0].time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}),departureList[i][0].transport.headsign,departureList[i][0].transport.textColor,departureList[i][0].transport.color)
 
-            newCard.setAttribute("departure",departureList[i][0].time)
+        for (let i = 0; i < departureList.length; i++) {
+            let newCard = createCard(departureList[i][0].transport.name, departureList[i][0].time.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            }), departureList[i][0].transport.headsign, departureList[i][0].transport.textColor, departureList[i][0].transport.color)
+
+            newCard.setAttribute("departure", departureList[i][0].time)
             divToFill.appendChild(newCard)
 
-            // let newRow = document.createElement("tr");
-            // let busNumberCell = document.createElement("td");
-            // let busNumberText = document.createTextNode(departureList[i][0].transport.name,);
-            // let busNumberSpan = document.createElement("span")
-            // busNumberSpan.appendChild(busNumberText)
-            // let busDepartureTimeCell = document.createElement("td");
-            // let busDepartureTimeText = document.createTextNode(departureList[i][0].time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'}));
-            //
-            // let busDestinationText = document.createTextNode(departureList[i][0].transport.headsign);
-            // let linebreak = document.createElement("br");
-            //
-            // busNumberCell.appendChild(busNumberSpan);
-            // busNumberSpan.style.color = departureList[i][0].transport.textColor;
-            // busNumberSpan.style.backgroundColor = departureList[i][0].transport.color;
-            // busDepartureTimeCell.appendChild(busDepartureTimeText);
-            // busDepartureTimeCell.appendChild(linebreak);
-            // busDepartureTimeCell.appendChild(busDestinationText);
-            //
-            // newRow.appendChild(busNumberCell);
-            // newRow.appendChild(busDepartureTimeCell);
-            // table.appendChild(newRow);
         }
 
     }
