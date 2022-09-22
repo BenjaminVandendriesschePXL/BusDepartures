@@ -17,13 +17,13 @@ function departures() {
     }, 14400000);
     const removePastDeparturesInterval = setInterval(removeOldDepartures, 30000)
 
+    configData = getDefaultData()
+    let busname = document.getElementById("BusStopName")
+    let trainname = document.getElementById("TrainStopName")
+    busname.appendChild(document.createTextNode(configData.BusStopName))
+    trainname.appendChild(document.createTextNode(configData.TrainStopName))
+    getBusData();
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => loadConfig(position));
-    } else {
-        configData = getDefaultData()
-        getBusData();
-    }
 
     function removeOldDepartures() {
         let timer = document.getElementById("currentTime")
