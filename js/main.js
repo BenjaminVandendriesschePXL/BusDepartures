@@ -156,8 +156,6 @@ function departures() {
         cardTime.classList.add("card-text")
         cardLine.classList.add("card-text")
 
-        transportNumber.style.color = textColor;
-        transportNumber.style.backgroundColor = color;
         cardTime.style.margin = 0;
 
         card.appendChild(transportNumber)

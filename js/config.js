@@ -1,11 +1,9 @@
 const config = {
     Leuven : {
-        lat : "50.888",
-        long : "4.706",
-        busStopIds : ["211014019","211014018"],
-        trainStopIds : ["701290754"],
-        BusStopName : "Leuven Vaartvest",
-        TrainStopName : "Leuven Station"
+        busStopIds: ["204039703", "204017678"],
+        trainStopIds: ["204039966"],
+        BusStopName: "Issy-Val de Seine",
+        TrainStopName: "Mairie d'Issy"
     }
 
 }

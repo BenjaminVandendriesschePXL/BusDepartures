@@ -1,19 +1,237 @@
+/*Custom properties*/
+:root {
+    --clr-neutral-100: hsl(0, 0%, 100%);
+    --clr-neutral-200: hsl(225, 100%, 98%);
+    --clr-neutral-400: hsla(223, 23%, 55%, 1);
+    --clr-neutral-800: hsl(223, 47%, 23%);
+
+    --clr-primary-200: rgb(15, 25, 65);
+    --clr-primary-300: hsla(205, 73%, 49%,1);
+    --clr-primary-400: rgb(15, 25, 65);
+
+    --clr-accent-400 : rgb(255, 181, 17);
+
+    --fs-900 : 2rem;
+    --fs-700 : 1.75rem;
+    --fs-400: 1rem;
+    --fs-300: 0.875rem;
+    --fs-200: 0.75rem;
+
+    --fw-400:500;
+    --fw-700:700;
+    --fw-900:900;
+}
+
+/*END Custom properties*/
+
+
+/*RESET*/
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+    margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+    list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+    text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+    max-width: 100%;
+    display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+/*END RESET*/
+
+/*Block*/
+
+body {
+    font-family: 'Graphik regular',sans-serif !important;
+    font-size: var(--fs-400);
+    font-weight: var(--fw-400);
+    color:var(--clr-neutral-400) !important;
+    background:var(--clr-primary-200) !important;
+    line-height: 1.6;
+}
+h1,
+h2,
+h3 {
+    line-height: 1.1;
+}
+h3 {
+    font-size:var(--fs-700) !important;
+    font-weight: var(--fw-900);
+    color: var(--clr-accent-400);
+    text-align:center;
+}
+
 .busNumber {
-    width:40px;
-    height:40px;
+    width:50px;
+    height:50px;
+    min-width:60px !important;
+    min-height:60px !important;
     line-height:40px;
     text-align: center;
     margin:auto;
-    border-radius : 10px;
+    /*border:1px solid var(--clr-neutral-400);*/
+    color: var(--clr-accent-400);
+    font-size:var(--fs-900);
 }
 
-.hideOverflow {
-    height:485px;
+.hideOverflow{
+    position:relative;
     overflow-y:hidden;
 }
+.col-sm-6{
+    margin:0 !important;
+    margin:auto;
+    padding:0 !important;
+}
 .card {
-    height:55px !important;
+    min-height:6em !important;
+    border:none !important;
+    border-radius:0 !important;
+    border-top: 3px solid white !important;
+    /*border-bottom: 2px solid white !important;*/
+    width:100%;
+    background:var(--clr-primary-400) !important;
+    color:var(--clr-neutral-200) !important;
+
 }
 .card-body {
-    padding:5px !important;
+    /*padding:5px !important;*/
+    font-size:var(--fs-400);
+
+}
+.card-text{
+    /*overflow:hidden;*/
+    word-wrap:break-word;
+    /*text-overflow: ellipsis;*/
+    max-height:2em;
+}
+
+/*Composition*/
+
+.flex-row{
+
+}
+
+.flow > * + * {
+    margin-top:1em;
+}
+
+/*Utility*/
+
+.box {
+    width:100%;
+    height:5%;
+    position:absolute;
+    bottom:0;
+    z-index:5;
+    background-image:linear-gradient(transparent,var(--clr-primary-400));
+}
+
+.txt-neutral-100{
+    color:var(--clr-neutral-100);
+}
+.txt-neutral-200{
+    color:var(--clr-neutral-200);
+}
+.txt-neutral-400{
+    color:var(--clr-neutral-400);
+}
+.txt-neutral-800{
+    color:var(--clr-neutral-800);
+}
+
+.bg-neutral-100{
+    background:var(--clr-neutral-100);
+}
+.bg-neutral-200{
+    background:var(--clr-neutral-200);
+}
+.bg-neutral-400{
+    background:var(--clr-neutral-400);
+}
+.bg-neutral-800{
+    background:var(--clr-neutral-800);
+}
+
+.fw-bold{
+    font-weight: var(--fw-700);
+}
+
+.fw-xbold{
+    font-weight: var(--fw-900);
+}
+
+.container-xl{
+    height:auto;
+}
+
+.margin-left-1{
+    padding-left:1em !important;
+}
+
+.border-left{
+    border-left:1px solid var(--clr-neutral-100) !important;
 }
