@@ -1,7 +1,7 @@
 departures()
 
 function departures() {
-    const api_key = "1hUmyZTqwRy5yxuakb-EuYtcukE8PzGg81A-BxAYPJo";
+    const api_key = "B4H5cMf3uGI8mEZEeGJTvruQsrx_ozLLVJ7ifTWo6zU";
     let configData;
     function init_widget(config) {
         if (!config) {
